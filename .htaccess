@@ -1,0 +1,53 @@
+# KPAW Canteen Portal — protect sensitive files when this folder
+# is copied directly into public_html (no build/deploy step filtering it).
+# This does NOT affect PHP's own require/include — only direct URL access.
+
+# Block directory listing — without this, with no index.php
+# (like empty admin/ or counter/ before their phase is built) could
+# expose their file listing directly
+Options -Indexes
+
+# Force HTTPS — without this, the site can be loaded unencrypted over
+# plain HTTP, sending login passwords and UPI details in plaintext.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Block .env outright
+<Files ".env">
+    Require all denied
+</Files>
+
+# Block the SQL migrations folder entirely
+<IfModule mod_alias.c>
+    RedirectMatch 403 ^/sql/
+</IfModule>
+
+# Block the uploads/ folder entirely — bank statement CSVs briefly
+# sit there during reconciliation processing (deleted immediately
+# after each upload finishes, per Phase 5). PHP's move_uploaded_file()
+# and fopen() calls in admin/csv-upload.php reach these files directly
+# on disk, never through a URL, so this has no effect on that code —
+# it only stops someone requesting the file directly in a browser.
+<IfModule mod_alias.c>
+    RedirectMatch 403 ^/uploads/
+</IfModule>
+
+# Block any .sql file anywhere, as a second layer of protection
+<FilesMatch "\.sql$">
+    Require all denied
+</FilesMatch>
+
+# Block repo/dev files that don't need to be public
+<FilesMatch "^(\.gitignore|\.env\.example|README\.md)$">
+    Require all denied
+</FilesMatch>
+
+# Block the includes/ folder from direct URL access —
+# PHP still reaches these fine via require_once, this only stops
+# someone requesting includes/db.php directly in a browser
+<IfModule mod_alias.c>
+    RedirectMatch 403 ^/includes/
+</IfModule>
