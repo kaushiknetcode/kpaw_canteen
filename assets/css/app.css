@@ -1,0 +1,1114 @@
+/* ============================================================
+   KPAW Canteen Portal — Design Tokens & Theme
+   Kanchrapara Workshop, Indian Railways.
+
+   Direction: railway blue + signal amber, condensed station-signage
+   type, monospace "departure board" treatment for countdowns/prices.
+   Grounded in the app's own subject matter (signal lamps, indicator
+   boards) rather than a generic palette — see the status colors
+   below, which map 1:1 onto the token status rules already in the
+   project's own master plan (PENDING amber / APPROVED green /
+   REJECTED red), not invented for this file.
+
+   This works by overriding Bootstrap 5's own CSS custom properties,
+   not by introducing new component classes everywhere — so every
+   existing .btn, .card, .badge, .alert on every page picks up the
+   theme the moment this file is linked from header.php, with zero
+   markup changes needed on book.php, dashboard.php, review.php, etc.
+   ============================================================ */
+
+:root {
+    --kpaw-blue: #001F4E;
+    --kpaw-blue-dark: #001333;
+    --kpaw-amber: #FA6402;
+    --kpaw-amber-dark: #D45402;
+    --kpaw-platform: #F3F1EA;
+    --kpaw-green: #2E7D46;
+    --kpaw-red: #B3261E;
+    --kpaw-muted: #6B7178;
+    --kpaw-border: #E2DFD4;
+
+    --kpaw-font-display: 'Oswald', sans-serif;
+    --kpaw-font-body: 'Inter', sans-serif;
+    --kpaw-font-mono: 'IBM Plex Mono', monospace;
+
+    /* Bootstrap variable overrides — the mechanism that cascades this
+       theme through every existing page without touching their markup. */
+    --bs-body-font-family: var(--kpaw-font-body);
+    --bs-body-bg: var(--kpaw-platform);
+    --bs-body-color: #23262A;
+
+    --bs-primary: var(--kpaw-blue);
+    --bs-primary-rgb: 11, 61, 107;
+    --bs-link-color: var(--kpaw-blue);
+    --bs-link-hover-color: var(--kpaw-blue-dark);
+    --bs-link-color-rgb: 11, 61, 107;
+
+    --bs-success: var(--kpaw-green);
+    --bs-success-rgb: 46, 125, 70;
+    --bs-warning: var(--kpaw-amber);
+    --bs-warning-rgb: 240, 162, 2;
+    --bs-danger: var(--kpaw-red);
+    --bs-danger-rgb: 179, 38, 30;
+
+    --bs-border-radius: 10px;
+    --bs-border-radius-lg: 14px;
+    --bs-border-radius-sm: 8px;
+}
+
+body {
+    font-family: var(--kpaw-font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+/* Bootstrap's default bg-warning/alert-warning pair light amber with
+   dark text — amber is light enough that this stays readable, just
+   tuning the exact shade for contrast against our specific amber. */
+.badge.bg-warning,
+.alert-warning {
+    color: #4A2E00;
+}
+.badge.bg-success,
+.badge.bg-danger {
+    color: #fff;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--kpaw-blue);
+    --bs-btn-border-color: var(--kpaw-blue);
+    --bs-btn-hover-bg: var(--kpaw-blue-dark);
+    --bs-btn-hover-border-color: var(--kpaw-blue-dark);
+    --bs-btn-active-bg: var(--kpaw-blue-dark);
+    font-weight: 500;
+}
+
+.btn-success {
+    --bs-btn-bg: var(--kpaw-amber);
+    --bs-btn-border-color: var(--kpaw-amber);
+    --bs-btn-color: #412402;
+    --bs-btn-hover-bg: var(--kpaw-amber-dark);
+    --bs-btn-hover-border-color: var(--kpaw-amber-dark);
+    --bs-btn-hover-color: #412402;
+    font-weight: 500;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--kpaw-blue);
+    --bs-btn-border-color: var(--kpaw-blue);
+    --bs-btn-hover-bg: var(--kpaw-blue);
+    --bs-btn-hover-border-color: var(--kpaw-blue);
+}
+
+.btn-outline-success {
+    --bs-btn-color: var(--kpaw-amber-dark);
+    --bs-btn-border-color: var(--kpaw-amber);
+    --bs-btn-hover-bg: var(--kpaw-amber);
+    --bs-btn-hover-border-color: var(--kpaw-amber);
+    --bs-btn-hover-color: #412402;
+}
+
+.card {
+    border-color: var(--kpaw-border);
+    box-shadow: 0 1px 3px rgba(27, 31, 35, 0.06);
+}
+
+/* Form field borders were nearly invisible — Bootstrap's default border
+   color is too light against this theme's off-white card background.
+   Darkened and thickened slightly for real visibility. */
+.form-control {
+    border-color: #B9B4A6;
+}
+.form-control:focus {
+    border-color: var(--kpaw-blue);
+}
+
+/* Login screen: Employee / Guest tabs. High-contrast active state
+   (navy fill, white text) so there's no ambiguity about which is
+   selected — and explicit appearance resets, since some mobile
+   browsers apply their own default button chrome (often a
+   yellowish/beige tint) to unstyled <button> elements otherwise. */
+.kpaw-tabs {
+    display: flex;
+    border-radius: 10px;
+    background: var(--kpaw-platform);
+    padding: 4px;
+    gap: 4px;
+}
+.kpaw-tab {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    border: 1.5px solid var(--kpaw-border) !important;
+    outline: none;
+    background: #ffffff !important;
+    background-image: none !important;
+    padding: 10px 0;
+    border-radius: 8px;
+    font-family: var(--kpaw-font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--kpaw-muted);
+    cursor: pointer;
+}
+.kpaw-tab--active {
+    background: var(--kpaw-blue) !important;
+    border-color: var(--kpaw-blue) !important;
+    color: #ffffff !important;
+    box-shadow: 0 1px 3px rgba(0, 31, 78, 0.25);
+}
+
+/* Password show/hide toggle */
+.kpaw-password-wrap {
+    position: relative;
+}
+.kpaw-password-wrap .form-control {
+    padding-right: 60px;
+}
+.kpaw-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--kpaw-blue);
+    font-family: var(--kpaw-font-body);
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+/* ------------------------------------------------------------
+   Header bar — sits flush on the page background (no dark block),
+   navy title with a thin amber accent underline, matching the
+   logo's own Ahar wordmark treatment (navy text, amber as a
+   restrained accent rather than the whole background).
+   ------------------------------------------------------------ */
+.kpaw-header-bar {
+    background: transparent;
+    padding: 10px 20px 8px;
+    border-bottom: 3px solid var(--kpaw-amber);
+}
+.kpaw-header-bar__title {
+    font-family: var(--kpaw-font-display);
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+}
+.kpaw-header-bar__brand { color: var(--kpaw-blue); }
+.kpaw-header-bar__subtitle {
+    font-family: var(--kpaw-font-body);
+    font-size: 0.8rem;
+    color: var(--kpaw-muted);
+    margin: 2px 0 0;
+}
+@media (max-width: 480px) {
+    .kpaw-header-bar { padding: 8px 16px 6px; }
+}
+
+/* ------------------------------------------------------------
+   Departure-board countdown — this IS the existing .kpaw-countdown
+   element already live sitewide (footer.php's ticker script targets
+   it), just restyled. No HTML changes needed on any page that
+   already has a countdown. The .text-danger toggle the script
+   already applies under 15 minutes now resolves to the Alert Red
+   above automatically, since --bs-danger was overridden.
+   ------------------------------------------------------------ */
+.kpaw-countdown {
+    font-family: var(--kpaw-font-mono);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ------------------------------------------------------------
+   Login screen branding — 3-logo row (side office logos tucked
+   close under the big Ahar emblem's ring, top-aligned) plus
+   the Ahar wordmark and the same text hierarchy as the actual
+   logo artwork (name / institution / "Canteen Portal"). Used only
+   by includes/header-branded.php.
+   ------------------------------------------------------------ */
+.kpaw-login-logos {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 12px;
+    margin-bottom: 6px;
+    gap: 8px;
+}
+.kpaw-login-logo-main {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    z-index: 1;
+    object-fit: contain;
+}
+.kpaw-login-logo-side {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.kpaw-brand-name {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+.kpaw-brand-name--solid { color: var(--kpaw-blue); }
+
+.kpaw-brand-subtitle {
+    font-size: 0.85rem;
+    color: var(--bs-body-color);
+    text-align: center;
+    margin: 4px 0 0;
+}
+.kpaw-brand-tagline {
+    font-family: var(--kpaw-font-display);
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--kpaw-muted);
+    text-align: center;
+    margin: 2px 0 10px;
+}
+
+/* Registration links — the "new user" call to action, deliberately in
+   amber rather than the default navy link color, so it reads as a
+   distinct secondary action next to "Forgot password?". */
+.kpaw-link-accent {
+    color: var(--kpaw-amber-dark);
+    font-weight: 600;
+    text-decoration: none;
+}
+.kpaw-link-accent:hover {
+    color: var(--kpaw-amber);
+    text-decoration: underline;
+}
+
+/* Small, refined pill buttons — used for the registration CTAs on the
+   login screen, deliberately understated next to the primary Log In
+   button rather than matching its size/weight. */
+.kpaw-btn-pill {
+    display: inline-block;
+    font-family: var(--kpaw-font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--kpaw-amber-dark);
+    background: #FFF3E6;
+    border: 1px solid var(--kpaw-amber);
+    border-radius: 999px;
+    padding: 6px 14px;
+    text-decoration: none;
+    text-align: center;
+}
+.kpaw-btn-pill:hover {
+    background: var(--kpaw-amber);
+    color: #ffffff;
+}
+
+/* Prices, UTRs, order IDs — tabular monospace wherever money or
+   reference numbers appear, so figures align like a real ledger. */
+.kpaw-mono {
+    font-family: var(--kpaw-font-mono);
+}
+
+/* Dashboard: admin notice board. Deliberately NOT a literal blink —
+   flashing/flickering content is a real accessibility concern (can
+   trigger issues for photosensitive users) and reads as dated/spammy
+   rather than authoritative. Instead: a solid, high-contrast treatment
+   plus a slow, continuous pulsing glow — draws the eye without ever
+   fully hiding/showing content. Respects prefers-reduced-motion. */
+.kpaw-notice-board {
+    background: var(--kpaw-amber);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    animation: kpaw-notice-pulse 2.4s ease-in-out infinite;
+}
+.kpaw-notice-board__icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.kpaw-notice-board__label {
+    font-family: var(--kpaw-font-display);
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4A2402;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.kpaw-notice-board__text {
+    font-size: 0.9rem;
+    color: #3A1F00;
+    font-weight: 500;
+}
+@keyframes kpaw-notice-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(250, 100, 2, 0.45); }
+    50%      { box-shadow: 0 0 0 10px rgba(250, 100, 2, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .kpaw-notice-board { animation: none; }
+}
+
+/* Dashboard: canteen direction cards — small, tappable, side by side. */
+.kpaw-direction-card {
+    display: block;
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 10px;
+    padding: 12px;
+    text-decoration: none;
+    height: 100%;
+}
+.kpaw-direction-card__title {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--kpaw-blue);
+}
+.kpaw-direction-card__subtitle {
+    font-size: 0.75rem;
+    color: var(--kpaw-muted);
+    margin-bottom: 8px;
+}
+.kpaw-direction-card__cta {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--kpaw-amber-dark);
+}
+
+/* Book a Meal, Step 1: canteen selection cards */
+.kpaw-canteen-card {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 31, 78, 0.06);
+}
+.kpaw-canteen-card__name {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--kpaw-blue);
+}
+.kpaw-canteen-card__brand {
+    font-size: 0.8rem;
+    color: var(--kpaw-muted);
+}
+.kpaw-btn-chart {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-amber);
+    color: var(--kpaw-amber-dark);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.kpaw-btn-chart:hover {
+    background: var(--kpaw-amber);
+    color: #ffffff;
+}
+
+/* Book a Meal, Step 2: canteen banner + meal tabs */
+.kpaw-canteen-banner {
+    background: var(--kpaw-platform);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    color: var(--kpaw-blue);
+    font-size: 0.95rem;
+}
+.kpaw-canteen-banner a {
+    font-family: var(--kpaw-font-body);
+    font-weight: 500;
+}
+.kpaw-meal-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.kpaw-meal-tab {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-decoration: none;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0, 31, 78, 0.06);
+}
+.kpaw-meal-tab:hover {
+    border-color: var(--kpaw-blue);
+}
+.kpaw-meal-tab__name {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    color: var(--kpaw-blue);
+    font-size: 1.15rem;
+}
+.kpaw-meal-tab__date {
+    font-size: 0.82rem;
+    color: var(--kpaw-muted);
+    margin-top: 2px;
+}
+.kpaw-meal-tab__meta {
+    font-size: 0.85rem;
+    color: var(--kpaw-blue);
+    margin-top: 8px;
+}
+.kpaw-meal-tab__closes {
+    font-size: 0.75rem;
+    color: var(--kpaw-amber-dark);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Payment screen: the UTR entry box — deliberately the most visually
+   distinct element on the page, since a mistyped UTR is the one thing
+   that can genuinely stop someone's order from being approved. */
+.kpaw-utr-box {
+    background: #FFF8EC;
+    border: 2px solid var(--kpaw-amber);
+    border-radius: 12px;
+    padding: 16px;
+}
+.kpaw-utr-box__label {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4A2402;
+    margin-bottom: 6px;
+}
+.kpaw-utr-box input.form-control {
+    border: 2px solid var(--kpaw-amber-dark);
+    letter-spacing: 2px;
+    font-size: 1.1rem;
+}
+.kpaw-utr-box input.form-control:focus {
+    border-color: var(--kpaw-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 31, 78, 0.15);
+}
+
+/* Payment screen: small round icon buttons for the "where's my UTR"
+   per-app help modals. */
+.kpaw-app-icon-btn {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--kpaw-muted);
+    text-align: center;
+}
+.kpaw-app-icon-btn img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Book a Meal, Step 3: redesigned meal info card */
+.kpaw-meal-info-card {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0, 31, 78, 0.06);
+}
+.kpaw-meal-info-card__title {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--kpaw-blue);
+}
+.kpaw-meal-info-card__date {
+    font-size: 0.75rem;
+    color: var(--kpaw-muted);
+    margin-top: 2px;
+}
+.kpaw-pill-outline {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-blue);
+    color: var(--kpaw-blue);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.kpaw-meal-info-chip {
+    flex: 1;
+    background: var(--kpaw-platform);
+    border-radius: 10px;
+    padding: 10px;
+}
+.kpaw-meal-info-chip--urgent {
+    background: #FFF3E6;
+}
+.kpaw-meal-info-chip__label {
+    font-size: 0.62rem;
+    color: var(--kpaw-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+.kpaw-meal-info-chip--urgent .kpaw-meal-info-chip__label {
+    color: var(--kpaw-amber-dark);
+}
+.kpaw-meal-info-chip__value {
+    font-size: 0.85rem;
+    color: #23262A;
+    font-weight: 500;
+}
+.kpaw-meal-info-chip--urgent .kpaw-meal-info-chip__value {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--kpaw-amber-dark);
+}
+.kpaw-meal-info-chip--urgent .kpaw-meal-info-chip__value.text-danger {
+    color: var(--kpaw-red) !important;
+}
+
+/* Book a Meal, Step 3: item cards */
+.kpaw-item-card {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 14px;
+    overflow: hidden;
+    height: 100%;
+}
+.kpaw-item-card--active {
+    border: 2px solid var(--kpaw-blue);
+    box-shadow: 0 3px 8px rgba(0, 31, 78, 0.12);
+}
+.kpaw-item-card__photo {
+    aspect-ratio: 1;
+    background: var(--kpaw-platform);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+}
+.kpaw-item-card--active .kpaw-item-card__photo {
+    background: #FFF3E6;
+}
+.kpaw-item-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.kpaw-item-card__body {
+    padding: 10px;
+    text-align: center;
+}
+.kpaw-item-card__name {
+    font-size: 0.82rem;
+    color: #23262A;
+    font-weight: 500;
+    margin: 0;
+}
+.kpaw-item-card__price {
+    font-size: 0.8rem;
+    color: var(--kpaw-muted);
+    margin: 0 0 8px;
+}
+.kpaw-item-card__add {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-amber);
+    color: var(--kpaw-amber-dark);
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+.kpaw-item-card__stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--kpaw-blue);
+    border-radius: 20px;
+    padding: 4px;
+}
+.kpaw-item-card__stepper-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-weight: 600;
+    line-height: 1;
+}
+.kpaw-item-card__stepper-btn--plus {
+    background: var(--kpaw-amber);
+}
+.kpaw-qty-display {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Book a Meal, Step 3: floating cart bar */
+.kpaw-cart-bar {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: 448px;
+    margin: 0 auto;
+    background: var(--kpaw-blue);
+    border-radius: 14px;
+    padding: 12px 16px;
+    box-shadow: 0 6px 20px rgba(0, 31, 78, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+.kpaw-cart-bar__count {
+    color: #B9C6D9;
+    font-size: 0.7rem;
+}
+.kpaw-cart-bar__total {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.kpaw-cart-bar__btn {
+    background: var(--kpaw-amber);
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 11px 22px;
+    border-radius: 10px;
+}
+.kpaw-cart-bar__btn:disabled {
+    background: #6B7178;
+    opacity: 0.6;
+}
+
+/* ------------------------------------------------------------
+   Admin section header bar. Solid navy — distinguishes the internal
+   admin/receptionist area from the employee-facing app (which has no
+   dark bar at all). Not the charcoal previously ruled out — a
+   different, already-established brand color, used here specifically
+   to signal "you are in a different, staff-only context."
+   ------------------------------------------------------------ */
+.kpaw-admin-bar {
+    background: var(--kpaw-blue);
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.kpaw-admin-bar__brand {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+.kpaw-admin-bar__brand-text {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    color: #ffffff;
+}
+.kpaw-admin-bar__tag {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+.kpaw-admin-bar__identity {
+    color: #ffffff;
+    font-size: 0.8rem;
+    text-align: right;
+}
+.kpaw-admin-bar__role {
+    display: block;
+    color: #B9C6D9;
+    font-size: 0.68rem;
+}
+
+/* My Bookings: the serving code shown once an order is approved —
+   this is what the employee tells/shows the receptionist at the
+   counter. Made deliberately prominent, matching the same "this is
+   important" treatment used for the payment screen's UTR box. */
+.kpaw-serving-code {
+    background: #E8F5EC;
+    border: 2px solid var(--kpaw-green);
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+}
+.kpaw-serving-code__label {
+    font-size: 0.7rem;
+    color: var(--kpaw-green);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.kpaw-serving-code__value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--kpaw-green);
+    letter-spacing: 4px;
+}
+.kpaw-serving-code--pending {
+    background: var(--kpaw-platform);
+    border-color: var(--kpaw-border);
+    opacity: 0.75;
+}
+.kpaw-serving-code--pending .kpaw-serving-code__label,
+.kpaw-serving-code--pending .kpaw-serving-code__value {
+    color: var(--kpaw-muted);
+}
+
+/* My Bookings: card redesign — colored left edge matching status,
+   same visual language as the admin Orders dashboard and book.php's
+   item cards, elevated and consistent throughout the app. */
+.kpaw-booking-card {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1.5px solid var(--kpaw-border);
+    padding: 14px 16px;
+    box-shadow: 0 2px 6px rgba(0, 31, 78, 0.06);
+}
+.kpaw-booking-card--warning   { border-left: 4px solid var(--kpaw-amber); }
+.kpaw-booking-card--success   { border-left: 4px solid var(--kpaw-green); }
+.kpaw-booking-card--danger    { border-left: 4px solid var(--kpaw-red); }
+.kpaw-booking-card--secondary { border-left: 4px solid var(--kpaw-muted); }
+.kpaw-booking-card--dark      { border-left: 4px solid #1B1F23; }
+.kpaw-booking-card__title {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--kpaw-blue);
+}
+
+/* Admin Orders dashboard: full redesign — tinted status header strip,
+   real elevation, and the override controls collapsed behind a
+   "Manage" button by default rather than always visible on every card. */
+.kpaw-order-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 31, 78, 0.1);
+    overflow: hidden;
+}
+.kpaw-order-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+}
+.kpaw-order-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.kpaw-order-card__status {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+.kpaw-order-card__body {
+    padding: 14px 16px;
+}
+.kpaw-order-card__name {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--kpaw-blue);
+}
+.kpaw-order-card__note {
+    background: #FFF3E6;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    color: var(--kpaw-amber-dark);
+    font-weight: 600;
+}
+.kpaw-order-card__manage-btn {
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 7px 16px;
+    border: 1.5px solid var(--kpaw-blue);
+    background: #ffffff;
+    color: var(--kpaw-blue);
+}
+
+/* Header tint + text color + manage-button fill, per status */
+.kpaw-order-card--warning .kpaw-order-card__header   { background: #FFF3E6; }
+.kpaw-order-card--warning .kpaw-order-card__dot       { background: var(--kpaw-amber-dark); }
+.kpaw-order-card--warning .kpaw-order-card__status,
+.kpaw-order-card--warning .kpaw-order-card__header .kpaw-mono { color: var(--kpaw-amber-dark); }
+
+.kpaw-order-card--success .kpaw-order-card__header    { background: #EAF3DE; }
+.kpaw-order-card--success .kpaw-order-card__dot        { background: var(--kpaw-green); }
+.kpaw-order-card--success .kpaw-order-card__status,
+.kpaw-order-card--success .kpaw-order-card__header .kpaw-mono { color: #3B6D11; }
+.kpaw-order-card__manage-btn--success {
+    background: var(--kpaw-blue);
+    color: #ffffff;
+    border-color: var(--kpaw-blue);
+}
+
+.kpaw-order-card--danger .kpaw-order-card__header     { background: #FDECEA; }
+.kpaw-order-card--danger .kpaw-order-card__dot         { background: var(--kpaw-red); }
+.kpaw-order-card--danger .kpaw-order-card__status,
+.kpaw-order-card--danger .kpaw-order-card__header .kpaw-mono { color: #A32D2D; }
+
+.kpaw-order-card--secondary .kpaw-order-card__header  { background: #F1EFE8; }
+.kpaw-order-card--secondary .kpaw-order-card__dot      { background: var(--kpaw-muted); }
+.kpaw-order-card--secondary .kpaw-order-card__status,
+.kpaw-order-card--secondary .kpaw-order-card__header .kpaw-mono { color: var(--kpaw-muted); }
+
+.kpaw-order-card--dark .kpaw-order-card__header       { background: #E2E1DD; }
+.kpaw-order-card--dark .kpaw-order-card__dot           { background: #1B1F23; }
+.kpaw-order-card--dark .kpaw-order-card__status,
+.kpaw-order-card--dark .kpaw-order-card__header .kpaw-mono { color: #1B1F23; }
+
+/* Item pills — used on My Bookings, admin Orders, and the receptionist
+   dashboard, so quantity is visually distinct instead of buried in
+   plain text. */
+.kpaw-item-pill {
+    background: var(--kpaw-platform);
+    border: 1px solid var(--kpaw-border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    color: var(--kpaw-blue);
+    white-space: nowrap;
+}
+.kpaw-item-pill__qty {
+    font-family: var(--kpaw-font-mono);
+    font-weight: 700;
+    color: var(--kpaw-amber);
+}
+
+/* Meal-type filter — a plain <select> reads as flat/uninteractive
+   next to everything else's boxed treatment. Make it unmistakably
+   clickable: solid border, background fill, and a visible chevron. */
+.kpaw-meal-filter {
+    border: 1.5px solid var(--kpaw-blue) !important;
+    background-color: #ffffff !important;
+    font-weight: 600;
+    color: var(--kpaw-blue);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23001F4E' d='M8 11L3 6h10z'/%3E%3C/svg%3E") !important;
+}
+
+/* Logout link in the shared admin/receptionist top bar — always
+   visible, never scrolled out of reach on a long card list. */
+.kpaw-admin-bar__logout {
+    color: #fff;
+    opacity: 0.85;
+    font-size: 0.7rem;
+    text-decoration: underline;
+    margin-left: 6px;
+}
+.kpaw-admin-bar__logout:hover {
+    opacity: 1;
+    color: #fff;
+}
+
+/* Booking-confirmed success checkmark — the classic UPI-style circle
+   draw + checkmark draw, on page load only (not repeated on revisit
+   scroll or anything triggered by JS). */
+.kpaw-success-check {
+    display: flex;
+    justify-content: center;
+}
+.kpaw-success-check__circle {
+    stroke: var(--kpaw-green);
+    stroke-width: 3;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 151;
+    animation: kpaw-draw-circle 0.5s ease-out forwards;
+}
+.kpaw-success-check__mark {
+    stroke: var(--kpaw-green);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 30;
+    stroke-dashoffset: 30;
+    animation: kpaw-draw-check 0.3s 0.5s ease-out forwards;
+}
+@keyframes kpaw-draw-circle {
+    to { stroke-dashoffset: 0; }
+}
+@keyframes kpaw-draw-check {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Menu Manager: small square thumbnail next to each item's name */
+.kpaw-item-thumb {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--kpaw-border);
+}
+
+/* Status summary bar — quick counts at the top of admin Orders and
+   the receptionist dashboard, for the current date+meal filter. */
+.kpaw-summary-bar {
+    display: flex;
+    gap: 8px;
+}
+.kpaw-summary-stat {
+    flex: 1;
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+}
+.kpaw-summary-stat__num {
+    font-family: var(--kpaw-font-mono);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--kpaw-blue);
+}
+.kpaw-summary-stat__label {
+    font-size: 0.68rem;
+    color: var(--kpaw-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.kpaw-summary-stat--warning .kpaw-summary-stat__num { color: var(--kpaw-amber-dark); }
+.kpaw-summary-stat--success .kpaw-summary-stat__num { color: var(--kpaw-green); }
+.kpaw-summary-stat--danger .kpaw-summary-stat__num  { color: var(--kpaw-red); }
+.kpaw-summary-stat--secondary .kpaw-summary-stat__num { color: var(--kpaw-muted); }
+
+/* Menu Manager: side-by-side canteen columns, real item cards instead
+   of a plain divided list. */
+.kpaw-menu-canteen-title {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    color: var(--kpaw-blue);
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--kpaw-amber);
+    padding-bottom: 8px;
+}
+.kpaw-menu-section {
+    background: #ffffff;
+    border: 1.5px solid var(--kpaw-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+.kpaw-menu-section__title {
+    font-family: var(--kpaw-font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--kpaw-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 8px;
+}
+.kpaw-menu-item-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--kpaw-platform);
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+}
+.kpaw-menu-item-card--inactive {
+    opacity: 0.6;
+}
+.kpaw-menu-item-card__img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.kpaw-menu-item-card__img--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 1px solid var(--kpaw-border);
+    font-size: 1.3rem;
+}
+.kpaw-menu-item-card__info {
+    flex: 1;
+    min-width: 0;
+}
+.kpaw-menu-item-card__name {
+    font-weight: 600;
+    color: var(--kpaw-blue);
+    font-size: 0.9rem;
+}
+.kpaw-menu-item-card__meta {
+    font-size: 0.75rem;
+    color: var(--kpaw-muted);
+}
+.kpaw-menu-item-card__actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.kpaw-menu-item-edit {
+    background: #ffffff;
+    border: 1px solid var(--kpaw-border);
+    border-radius: 10px;
+    padding: 10px;
+    margin: -2px 0 8px 0;
+}
+.kpaw-menu-add-card {
+    background: #ffffff;
+    border: 1.5px dashed var(--kpaw-border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+/* Ahar wordmark — back to Oswald (the same font MealHub used), just
+   orange, title case as it appears in the actual logo. No stroke, no
+   shadow, no animation — simple and clean, matching the real artwork
+   rather than piling on effects.
+   Deliberately does NOT set display:inline-block — that was only ever
+   needed for the animation's scale transform (now removed), and it
+   was actively breaking text-align:center on the login screen version
+   by making the box itself shrink-to-fit instead of staying block. */
+.kpaw-brand-wordmark {
+    font-family: var(--kpaw-font-display);
+    font-weight: 700;
+    color: var(--kpaw-amber);
+    letter-spacing: 0.3px;
+    line-height: 1;
+}
+.kpaw-header-bar__title.kpaw-brand-wordmark { font-size: 1.6rem; }
+.kpaw-brand-name.kpaw-brand-wordmark { font-size: 2rem; }
+.kpaw-admin-bar__brand-text.kpaw-brand-wordmark { font-size: 1.3rem; }
