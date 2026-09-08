@@ -134,6 +134,96 @@ function is_slot_still_valid(PDO $pdo, string $meal_type, string $target_date): 
 }
 
 /**
+ * NEW — the combined-booking version of the availability logic above.
+ * Groups by DAY instead of by meal type: returns up to 2 day-groups
+ * (always exactly 2 once there's more than one day's worth of meals
+ * left to show), each listing every meal still bookable that day.
+ * Rolls forward exactly like get_available_meal_slots() does, and
+ * reuses the same is_day_blocked_for_meal()/weekly_availability
+ * checks — this is a new VIEW over the same underlying rules, not a
+ * different rule set.
+ *
+ * If today has zero bookable meals left (all closed or blocked), it's
+ * skipped entirely rather than shown as an empty group — so the two
+ * cards shown are always the next two days that actually have
+ * something bookable, matching the agreed "always exactly 2 cards,
+ * rolling forward together" behavior.
+ */
+function get_bookable_day_groups(PDO $pdo): array
+{
+    if (bookings_are_stopped($pdo)) {
+        return [];
+    }
+
+    $rules = get_meal_timing_rules($pdo);
+    $now = new DateTime('now');
+    $today = $now->format('Y-m-d');
+    $groups = [];
+    $cursor = clone $now;
+    $daysChecked = 0;
+
+    while (count($groups) < 2 && $daysChecked < 21) { // 21-day safety cap, same spirit as the 14-day cap elsewhere
+        $dateStr = $cursor->format('Y-m-d');
+        $mealsForDay = [];
+
+        foreach ($rules as $type => $rule) {
+            if (is_day_blocked_for_meal($pdo, $cursor, $type)) {
+                continue;
+            }
+            // Only today's cutoff can have already passed — a future
+            // day's cutoff, by definition, hasn't happened yet.
+            if ($dateStr === $today) {
+                $closesToday = DateTime::createFromFormat('Y-m-d H:i:s', $dateStr . ' ' . $rule['closes']);
+                if ($now >= $closesToday) {
+                    continue;
+                }
+            }
+            $closesAt = DateTime::createFromFormat('Y-m-d H:i:s', $dateStr . ' ' . $rule['closes']);
+            $mealsForDay[] = [
+                'meal_type'   => $type,
+                'serve_start' => $rule['serve_start'],
+                'serve_end'   => $rule['serve_end'],
+                'closes_at'   => $closesAt->format(DateTime::ATOM),
+                'label'       => $rule['label'],
+            ];
+        }
+
+        if (!empty($mealsForDay)) {
+            $daysAhead = (int) $now->diff($cursor)->format('%r%a');
+            $dayLabel = match (true) {
+                $daysAhead <= 0  => 'Today',
+                $daysAhead === 1 => 'Tomorrow',
+                default          => $cursor->format('l'),
+            };
+            $groups[] = ['date' => $dateStr, 'label' => $dayLabel, 'meals' => $mealsForDay];
+        }
+
+        $cursor->modify('+1 day');
+        $daysChecked++;
+    }
+
+    return $groups;
+}
+
+/**
+ * Re-validation at submission time, for the combined-booking flow —
+ * the same purpose is_slot_still_valid() serves for the old flow.
+ */
+function is_meal_bookable_on(PDO $pdo, string $meal_type, string $date): bool
+{
+    foreach (get_bookable_day_groups($pdo) as $group) {
+        if ($group['date'] === $date) {
+            foreach ($group['meals'] as $m) {
+                if ($m['meal_type'] === $meal_type) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/**
  * Format a date as "Thu, 20-08-2026" — day name included, per the
  * project's DD-MM-YYYY display convention.
  */
